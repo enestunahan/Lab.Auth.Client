@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+/* Tailwind CSS v4 — entry point */
+@import 'tailwindcss';
+
+/* Public taraf için global ayarlar
+   (admin tarafta Material kendi tipografi/temasını uygulayacak) */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
