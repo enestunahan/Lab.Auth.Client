@@ -1,0 +1,58 @@
+<mat-sidenav-container class="admin-shell">
+  <mat-sidenav
+    #sidenav
+    mode="side"
+    [opened]="sidenavOpen()"
+    class="admin-sidenav"
+  >
+    <div class="px-4 py-5 border-b border-slate-200">
+      <div class="flex items-center gap-2 font-bold">
+        <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-white text-sm">
+          KT
+        </span>
+        <span>Kitaplık</span>
+        <span class="ml-auto text-xs font-medium uppercase tracking-wide text-slate-400">
+          Admin
+        </span>
+      </div>
+    </div>
+
+    <mat-nav-list>
+      <a
+        mat-list-item
+        routerLink="."
+        routerLinkActive="active-nav-item"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+      <a
+        mat-list-item
+        routerLink="books"
+        routerLinkActive="active-nav-item"
+      >
+        <mat-icon matListItemIcon>menu_book</mat-icon>
+        <span matListItemTitle>Kitaplar</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="admin-toolbar">
+      <button mat-icon-button (click)="toggleSidenav()" aria-label="Menüyü aç/kapat">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="font-semibold ml-2">Yönetim Paneli</span>
+      <span class="flex-1"></span>
+      <a mat-button routerLink="/">
+        <mat-icon>open_in_new</mat-icon>
+        <span>Public Site</span>
+      </a>
+    </mat-toolbar>
+
+    <main class="p-6 md:p-8">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

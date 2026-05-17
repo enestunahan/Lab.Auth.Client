@@ -1,0 +1,39 @@
+<section class="space-y-6">
+  <header>
+    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Dashboard</h1>
+    <p class="text-slate-500 text-sm mt-1">
+      Yönetim panelinin özet ekranı.
+    </p>
+  </header>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    @for (metric of metrics(); track metric.label) {
+      <mat-card appearance="outlined" class="!rounded-xl">
+        <mat-card-content class="!p-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-wide text-slate-500">
+                {{ metric.label }}
+              </p>
+              <p class="text-3xl font-bold text-slate-900 mt-1">
+                {{ metric.count }}
+              </p>
+            </div>
+            <mat-icon class="!text-slate-400 !text-3xl !w-9 !h-9">
+              {{ metric.icon }}
+            </mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  <mat-card appearance="outlined" class="!rounded-xl">
+    <mat-card-content class="!p-6">
+      <p class="text-sm text-slate-600">
+        Admin paneli artık <strong>lazy chunk</strong> olarak yüklenen ayrı
+        bir JS dosyasından geliyor. Public ziyaretçi bu kodu hiç indirmiyor.
+      </p>
+    </mat-card-content>
+  </mat-card>
+</section>

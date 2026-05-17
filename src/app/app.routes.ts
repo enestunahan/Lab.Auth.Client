@@ -4,7 +4,6 @@ import { PublicLayout } from '@features/public/layout/public-layout';
 import { Home } from '@features/public/home/home';
 import { BookDetail } from '@features/public/book-detail/book-detail';
 import { NotFound } from '@features/public/not-found/not-found';
-import { AdminPlaceholder } from '@features/admin/admin-placeholder';
 
 export const routes: Routes = [
   {
@@ -17,7 +16,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    component: AdminPlaceholder,
+    loadChildren: () =>
+      import('@features/admin/admin.routes').then((m) => m.adminRoutes),
   },
   {
     path: '**',
