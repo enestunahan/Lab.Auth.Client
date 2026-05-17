@@ -1,0 +1,18 @@
+<h2 mat-dialog-title class="!font-semibold">{{ data.title }}</h2>
+
+<mat-dialog-content>
+  <p class="text-slate-600 leading-relaxed">{{ data.message }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()" cdkFocusInitial>
+    {{ data.cancelText ?? 'Vazgeç' }}
+  </button>
+  <button
+    mat-flat-button
+    [color]="data.danger ? 'warn' : 'primary'"
+    (click)="confirm()"
+  >
+    {{ data.confirmText ?? 'Onayla' }}
+  </button>
+</mat-dialog-actions>

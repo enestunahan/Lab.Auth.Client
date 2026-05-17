@@ -18,7 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { BookService } from '@core/services';
+import { BookService, ConfirmService, NotificationService } from '@core/services';
 import type { Book } from '@core/models';
 
 @Component({
@@ -41,6 +41,8 @@ import type { Book } from '@core/models';
 export class BookList {
   private readonly bookService = inject(BookService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly confirm = inject(ConfirmService);
+  private readonly notification = inject(NotificationService);
 
   protected readonly dataSource = new MatTableDataSource<Book>([]);
 
@@ -72,7 +74,15 @@ export class BookList {
     }
   }
 
-  protected onDelete(book: Book): void {
-    console.log('[Adım 11 için bekliyor] Silme onayı:', book.title);
+  protected async onDelete(book: Book): Promise<void> {
+    const confirmed = await this.confirm.ask({
+      title: 'Kitabı sil',
+      message: `"${book.title}" kalıcı olarak silinecek. Devam edilsin mi?`,
+      confirmText: 'Sil',
+      danger: true,
+    });
+    if (!confirmed) return;
+
+    this.notification.success(`"${book.title}" silindi. (Gerçek silme Adım 13'te)`);
   }
 }
