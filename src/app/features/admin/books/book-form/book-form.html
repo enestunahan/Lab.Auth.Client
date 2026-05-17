@@ -1,0 +1,111 @@
+<section class="space-y-6 max-w-3xl">
+  <header>
+    <a routerLink="/admin/books" class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 mb-3">
+      <span aria-hidden="true">←</span>
+      Listeye dön
+    </a>
+    <h1 class="text-2xl font-bold tracking-tight text-slate-900">
+      {{ isEditMode() ? 'Kitabı Düzenle' : 'Yeni Kitap' }}
+    </h1>
+    <p class="text-slate-500 text-sm mt-1">
+      @if (isEditMode()) {
+        Mevcut kayıt güncellenecek.
+      } @else {
+        Yeni bir kitap kaydı oluşturuluyor.
+      }
+    </p>
+  </header>
+
+  @if (isEditMode() && editingBook() === null) {
+    <div class="rounded-xl border border-dashed border-slate-300 bg-white p-12 text-center space-y-3">
+      <p class="text-5xl font-bold text-slate-300">404</p>
+      <h2 class="text-lg font-semibold">Düzenlenecek kitap bulunamadı</h2>
+      <p class="text-slate-500 text-sm">Link hatalı olabilir.</p>
+      <a mat-flat-button routerLink="/admin/books">
+        <mat-icon>arrow_back</mat-icon>
+        Listeye dön
+      </a>
+    </div>
+  } @else {
+    <form
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+      class="bg-white rounded-xl border border-slate-200 p-6 space-y-4"
+      novalidate
+    >
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Başlık</mat-label>
+        <input matInput formControlName="title" placeholder="örn. Kürk Mantolu Madonna" />
+        <mat-error>{{ getError(form.controls.title) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Açıklama</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          rows="4"
+          placeholder="Kısa bir tanıtım..."
+        ></textarea>
+        <mat-hint align="end">{{ form.controls.description.value.length }}/2000</mat-hint>
+        <mat-error>{{ getError(form.controls.description) }}</mat-error>
+      </mat-form-field>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <mat-form-field appearance="outline">
+          <mat-label>ISBN</mat-label>
+          <input matInput formControlName="isbn" placeholder="9789750805000" inputmode="numeric" />
+          <mat-hint>10 veya 13 basamak</mat-hint>
+          <mat-error>{{ getError(form.controls.isbn) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Yayın Yılı</mat-label>
+          <input matInput formControlName="publicationYear" type="number" [min]="1450" [max]="currentYear + 5" />
+          <mat-error>{{ getError(form.controls.publicationYear) }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Yayıncı</mat-label>
+        <mat-select formControlName="publisherId" [compareWith]="compareById">
+          @for (publisher of publishers; track publisher.id) {
+            <mat-option [value]="publisher.id">{{ publisher.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>{{ getError(form.controls.publisherId) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Yazarlar</mat-label>
+        <mat-select formControlName="authorIds" multiple [compareWith]="compareById">
+          @for (author of authors; track author.id) {
+            <mat-option [value]="author.id">
+              {{ author.firstName }} {{ author.lastName }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-hint>Birden fazla yazar seçilebilir</mat-hint>
+        <mat-error>{{ getError(form.controls.authorIds) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Kategoriler</mat-label>
+        <mat-select formControlName="categoryIds" multiple [compareWith]="compareById">
+          @for (category of categories; track category.id) {
+            <mat-option [value]="category.id">{{ category.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>{{ getError(form.controls.categoryIds) }}</mat-error>
+      </mat-form-field>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
+        <a mat-button routerLink="/admin/books" type="button">İptal</a>
+        <button mat-flat-button color="primary" type="submit">
+          <mat-icon>save</mat-icon>
+          {{ isEditMode() ? 'Kaydet' : 'Oluştur' }}
+        </button>
+      </div>
+    </form>
+  }
+</section>
