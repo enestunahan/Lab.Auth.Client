@@ -1,18 +1,104 @@
-<section class="space-y-4">
-  <a routerLink="/" class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900">
-    <span aria-hidden="true">←</span>
-    Ana sayfaya dön
-  </a>
+<a
+  routerLink="/"
+  class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 mb-6"
+>
+  <span aria-hidden="true">←</span>
+  Ana sayfaya dön
+</a>
 
-  <h1 class="text-3xl font-bold tracking-tight">Kitap Detayı</h1>
+@if (book(); as detail) {
+  <article class="space-y-8">
+    <header class="space-y-3">
+      <div class="flex items-center gap-2 text-xs">
+        <span class="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-700">
+          {{ detail.publicationYear }}
+        </span>
+        <span class="font-mono text-slate-500">ISBN {{ detail.isbn }}</span>
+      </div>
 
-  <div class="rounded-lg border border-slate-200 bg-white p-4 text-sm">
-    <span class="text-slate-500">Route param (<code class="text-slate-700">:id</code>):</span>
-    <code class="ml-1 rounded bg-slate-100 px-2 py-0.5 text-slate-800">{{ bookId() }}</code>
+      <h1 class="text-4xl font-bold tracking-tight text-slate-900">
+        {{ detail.title }}
+      </h1>
+
+      @if (detail.publisherName) {
+        <p class="text-slate-600">
+          <span class="text-slate-400">Yayıncı:</span>
+          {{ detail.publisherName }}
+        </p>
+      }
+    </header>
+
+    @if (detail.description) {
+      <section>
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-2">
+          Açıklama
+        </h2>
+        <p class="text-slate-700 leading-relaxed">{{ detail.description }}</p>
+      </section>
+    }
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">
+          Yazarlar
+        </h2>
+        @if (detail.authors.length > 0) {
+          <ul class="space-y-2">
+            @for (author of detail.authors; track author.id) {
+              <li class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800">
+                {{ author.firstName }} {{ author.lastName }}
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="text-sm text-slate-400">Yazar bilgisi yok.</p>
+        }
+      </div>
+
+      <div>
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">
+          Kategoriler
+        </h2>
+        @if (detail.categories.length > 0) {
+          <div class="flex flex-wrap gap-2">
+            @for (category of detail.categories; track category.id) {
+              <span class="rounded-full bg-slate-900 text-white text-xs font-medium px-3 py-1">
+                {{ category.name }}
+              </span>
+            }
+          </div>
+        } @else {
+          <p class="text-sm text-slate-400">Kategori bilgisi yok.</p>
+        }
+      </div>
+    </section>
+  </article>
+} @else if (book() === null) {
+  <div class="text-center py-16 space-y-4">
+    <p class="text-5xl font-bold text-slate-300">404</p>
+    <h1 class="text-xl font-semibold">Kitap bulunamadı</h1>
+    <p class="text-slate-500">Aradığın kitap kaldırılmış veya link hatalı olabilir.</p>
+    <a
+      routerLink="/"
+      class="inline-block rounded-lg bg-slate-900 text-white px-4 py-2 text-sm font-medium hover:bg-slate-800 transition-colors"
+    >
+      Ana sayfaya dön
+    </a>
   </div>
-
-  <div class="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-600">
-    <span class="h-2 w-2 rounded-full bg-amber-500"></span>
-    Placeholder · Adım 6 bekleniyor
+} @else {
+  <div class="space-y-6 animate-pulse">
+    <div class="space-y-3">
+      <div class="flex gap-2">
+        <div class="h-6 w-14 bg-slate-200 rounded-full"></div>
+        <div class="h-6 w-32 bg-slate-100 rounded"></div>
+      </div>
+      <div class="h-10 w-2/3 bg-slate-200 rounded"></div>
+      <div class="h-4 w-40 bg-slate-100 rounded"></div>
+    </div>
+    <div class="space-y-2">
+      <div class="h-3 w-full bg-slate-100 rounded"></div>
+      <div class="h-3 w-11/12 bg-slate-100 rounded"></div>
+      <div class="h-3 w-4/5 bg-slate-100 rounded"></div>
+    </div>
   </div>
-</section>
+}

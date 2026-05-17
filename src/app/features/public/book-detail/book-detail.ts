@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { map, of, switchMap } from 'rxjs';
+
+import { BookService } from '@core/services';
 
 @Component({
   selector: 'app-book-detail',
@@ -11,9 +13,12 @@ import { map } from 'rxjs';
 })
 export class BookDetail {
   private readonly route = inject(ActivatedRoute);
+  private readonly bookService = inject(BookService);
 
-  protected readonly bookId = toSignal(
-    this.route.paramMap.pipe(map((p) => p.get('id'))),
-    { initialValue: null },
+  protected readonly book = toSignal(
+    this.route.paramMap.pipe(
+      map((p) => p.get('id')),
+      switchMap((id) => (id ? this.bookService.getById(id) : of(null))),
+    ),
   );
 }
