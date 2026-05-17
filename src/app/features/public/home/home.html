@@ -2,13 +2,13 @@
   <header class="flex items-end justify-between gap-4 flex-wrap">
     <div>
       <h1 class="text-3xl font-bold tracking-tight">Kitaplar</h1>
-      <p class="text-slate-500 mt-1 text-sm">
+      <div class="mt-1 text-sm">
         @if (books()) {
-          {{ count() }} kitap · yeni yayınlardan eskiye
+          <p class="text-slate-500">{{ count() }} kitap · yeni yayınlardan eskiye</p>
         } @else {
-          Yükleniyor...
+          <app-loading-spinner size="sm" label="Yükleniyor" />
         }
-      </p>
+      </div>
     </div>
   </header>
 
@@ -28,8 +28,8 @@
               {{ book.title }}
             </h3>
             @if (book.description) {
-              <p class="mt-2 text-sm text-slate-600 line-clamp-2">
-                {{ book.description }}
+              <p class="mt-2 text-sm text-slate-600">
+                {{ book.description | truncate:90 }}
               </p>
             }
             <div class="mt-4 flex items-center justify-between text-xs text-slate-500">

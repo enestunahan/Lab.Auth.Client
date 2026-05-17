@@ -45,7 +45,10 @@
         @if (detail.authors.length > 0) {
           <ul class="space-y-2">
             @for (author of detail.authors; track author.id) {
-              <li class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800">
+              <li
+                appHighlightOnHover="bg-amber-50"
+                class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 transition-colors cursor-default"
+              >
                 {{ author.firstName }} {{ author.lastName }}
               </li>
             }

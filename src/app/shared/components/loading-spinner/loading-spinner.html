@@ -1,0 +1,10 @@
+<span class="inline-flex items-center gap-2 text-sm text-slate-500">
+  <span
+    class="inline-block rounded-full border-slate-200 border-t-slate-700 animate-spin"
+    [class]="sizeClasses()"
+    aria-hidden="true"
+  ></span>
+  @if (label()) {
+    <span>{{ label() }}</span>
+  }
+</span>

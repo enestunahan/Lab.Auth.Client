@@ -4,10 +4,11 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map, of, switchMap } from 'rxjs';
 
 import { BookService } from '@core/services';
+import { HighlightOnHover } from '@shared';
 
 @Component({
   selector: 'app-book-detail',
-  imports: [RouterLink],
+  imports: [RouterLink, HighlightOnHover],
   templateUrl: './book-detail.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
