@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+.mat-mdc-table {
+  background-color: transparent;
+}
+
+.mat-mdc-header-row {
+  background-color: rgb(248 250 252);
+}

@@ -1,18 +1,90 @@
 <section class="space-y-6">
-  <header class="flex items-center justify-between">
+  <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
     <div>
       <h1 class="text-2xl font-bold tracking-tight text-slate-900">Kitaplar</h1>
       <p class="text-slate-500 text-sm mt-1">
-        Adım 9'da bu sayfa `mat-table` ile dolacak.
+        {{ dataSource.data.length }} kayıt · sırala, filtrele, sayfala
       </p>
     </div>
-    <button mat-flat-button color="primary">
+    <a mat-flat-button routerLink="new">
       <mat-icon>add</mat-icon>
       Yeni Kitap
-    </button>
+    </a>
   </header>
 
-  <div class="rounded-xl border border-dashed border-slate-300 bg-white p-12 text-center">
-    <p class="text-slate-500">Tablo henüz hazır değil.</p>
+  <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+    <div class="p-4 border-b border-slate-200">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full sm:w-80">
+        <mat-label>Ara</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          placeholder="Başlık, ISBN..."
+          #filterInput
+          (input)="applyFilter(filterInput.value)"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table mat-table [dataSource]="dataSource" matSort class="w-full">
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Başlık</th>
+          <td mat-cell *matCellDef="let book" class="!font-medium !text-slate-900">
+            {{ book.title }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="publicationYear">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Yayın Yılı</th>
+          <td mat-cell *matCellDef="let book">{{ book.publicationYear }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="isbn">
+          <th mat-header-cell *matHeaderCellDef>ISBN</th>
+          <td mat-cell *matCellDef="let book" class="!font-mono !text-xs !text-slate-500">
+            {{ book.isbn }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="!text-right">Eylemler</th>
+          <td mat-cell *matCellDef="let book" class="!text-right">
+            <a
+              mat-icon-button
+              [routerLink]="[book.id, 'edit']"
+              matTooltip="Düzenle"
+              aria-label="Kitabı düzenle"
+            >
+              <mat-icon>edit</mat-icon>
+            </a>
+            <button
+              mat-icon-button
+              (click)="onDelete(book)"
+              matTooltip="Sil"
+              aria-label="Kitabı sil"
+            >
+              <mat-icon class="!text-red-600">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="text-center text-slate-500 py-12" [attr.colspan]="displayedColumns.length">
+            Aradığın kritere uyan kitap bulunamadı.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25]"
+      [pageSize]="10"
+      showFirstLastButtons
+      aria-label="Kitap sayfaları"
+    />
   </div>
 </section>
