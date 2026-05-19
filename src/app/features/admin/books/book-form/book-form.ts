@@ -23,8 +23,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
-import { BookService, NotificationService } from '@core/services';
-import { AUTHORS, CATEGORIES, PUBLISHERS } from '@data';
+import {
+  AuthorService,
+  BookService,
+  CategoryService,
+  NotificationService,
+  PublisherService,
+  type CreateBookPayload,
+} from '@core/services';
 import { getControlErrorMessage } from '@shared/utils';
 
 @Component({
@@ -46,11 +52,20 @@ export class BookForm {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly bookService = inject(BookService);
+  private readonly authorService = inject(AuthorService);
+  private readonly categoryService = inject(CategoryService);
+  private readonly publisherService = inject(PublisherService);
   private readonly notification = inject(NotificationService);
 
-  protected readonly publishers = PUBLISHERS;
-  protected readonly authors = AUTHORS;
-  protected readonly categories = CATEGORIES;
+  protected readonly publishers = toSignal(this.publisherService.getList(), {
+    initialValue: [],
+  });
+  protected readonly authors = toSignal(this.authorService.getList(), {
+    initialValue: [],
+  });
+  protected readonly categories = toSignal(this.categoryService.getList(), {
+    initialValue: [],
+  });
 
   protected readonly currentYear = new Date().getFullYear();
 
@@ -122,12 +137,32 @@ export class BookForm {
     }
 
     const value = this.form.getRawValue();
+    const payload: CreateBookPayload = {
+      title: value.title,
+      description: value.description.trim() === '' ? null : value.description,
+      isbn: value.isbn,
+      publicationYear: value.publicationYear,
+      publisherId: value.publisherId,
+    };
 
-    console.log('[Adım 13 için bekliyor] Form submit:', value);
-
-    const action = this.isEditMode() ? 'güncellendi' : 'eklendi';
-    this.notification.success(`"${value.title}" ${action}.`);
-    this.router.navigate(['/admin/books']);
+    const id = this.bookId();
+    if (id) {
+      this.bookService.update(id, payload).subscribe({
+        next: () => {
+          this.notification.success(`"${value.title}" güncellendi.`);
+          this.router.navigate(['/admin/books']);
+        },
+        error: () => this.notification.error('Güncelleme sırasında bir hata oluştu.'),
+      });
+    } else {
+      this.bookService.create(payload).subscribe({
+        next: () => {
+          this.notification.success(`"${value.title}" eklendi.`);
+          this.router.navigate(['/admin/books']);
+        },
+        error: () => this.notification.error('Kayıt sırasında bir hata oluştu.'),
+      });
+    }
   }
 
   protected compareById(a: string, b: string): boolean {

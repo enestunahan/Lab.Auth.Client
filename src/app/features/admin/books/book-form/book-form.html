@@ -69,7 +69,7 @@
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Yayıncı</mat-label>
         <mat-select formControlName="publisherId" [compareWith]="compareById">
-          @for (publisher of publishers; track publisher.id) {
+          @for (publisher of publishers(); track publisher.id) {
             <mat-option [value]="publisher.id">{{ publisher.name }}</mat-option>
           }
         </mat-select>
@@ -79,7 +79,7 @@
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Yazarlar</mat-label>
         <mat-select formControlName="authorIds" multiple [compareWith]="compareById">
-          @for (author of authors; track author.id) {
+          @for (author of authors(); track author.id) {
             <mat-option [value]="author.id">
               {{ author.firstName }} {{ author.lastName }}
             </mat-option>
@@ -92,7 +92,7 @@
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Kategoriler</mat-label>
         <mat-select formControlName="categoryIds" multiple [compareWith]="compareById">
-          @for (category of categories; track category.id) {
+          @for (category of categories(); track category.id) {
             <mat-option [value]="category.id">{{ category.name }}</mat-option>
           }
         </mat-select>
