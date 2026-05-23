@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { environment } from '@env/environment';
+import { ApiHttpService } from '@core/http';
 
 export interface CategoryListItem {
   readonly id: string;
@@ -11,10 +10,9 @@ export interface CategoryListItem {
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiBaseUrl}/api/categories`;
+  private readonly api = inject(ApiHttpService);
 
   getList(): Observable<CategoryListItem[]> {
-    return this.http.get<CategoryListItem[]>(this.baseUrl);
+    return this.api.get<CategoryListItem[]>('/api/categories');
   }
 }

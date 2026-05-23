@@ -83,15 +83,14 @@ export class BookList {
     });
     if (!confirmed) return;
 
+    // Hata mesajı `apiErrorInterceptor` tarafından otomatik gösterilir;
+    // burada sadece başarı durumunu handle ediyoruz.
     this.bookService
       .delete(book.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.dataSource.data = this.dataSource.data.filter((b) => b.id !== book.id);
-          this.notification.success(`"${book.title}" silindi.`);
-        },
-        error: () => this.notification.error('Silme sırasında bir hata oluştu.'),
+      .subscribe(() => {
+        this.dataSource.data = this.dataSource.data.filter((b) => b.id !== book.id);
+        this.notification.success(`"${book.title}" silindi.`);
       });
   }
 }

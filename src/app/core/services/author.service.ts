@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { environment } from '@env/environment';
+import { ApiHttpService } from '@core/http';
 
 export interface AuthorListItem {
   readonly id: string;
@@ -12,10 +11,9 @@ export interface AuthorListItem {
 
 @Injectable({ providedIn: 'root' })
 export class AuthorService {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiBaseUrl}/api/authors`;
+  private readonly api = inject(ApiHttpService);
 
   getList(): Observable<AuthorListItem[]> {
-    return this.http.get<AuthorListItem[]>(this.baseUrl);
+    return this.api.get<AuthorListItem[]>('/api/authors');
   }
 }

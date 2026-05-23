@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { environment } from '@env/environment';
+import { ApiHttpService } from '@core/http';
 
 export interface PublisherListItem {
   readonly id: string;
@@ -11,10 +10,9 @@ export interface PublisherListItem {
 
 @Injectable({ providedIn: 'root' })
 export class PublisherService {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiBaseUrl}/api/publishers`;
+  private readonly api = inject(ApiHttpService);
 
   getList(): Observable<PublisherListItem[]> {
-    return this.http.get<PublisherListItem[]>(this.baseUrl);
+    return this.api.get<PublisherListItem[]>('/api/publishers');
   }
 }

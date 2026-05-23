@@ -15,7 +15,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { map, of, switchMap } from 'rxjs';
+import { catchError, map, of, switchMap } from 'rxjs';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -106,10 +106,14 @@ export class BookForm {
 
   protected readonly isEditMode = computed(() => this.bookId() !== null);
 
+  // 404 olursa interceptor toast gösterir; burada `catchError` ile null'a
+  // düşürüyoruz ki form düzgün şekilde "yeni kayıt" akışına geri dönebilsin.
   protected readonly editingBook = toSignal(
     this.route.paramMap.pipe(
       map((p) => p.get('id')),
-      switchMap((id) => (id ? this.bookService.getById(id) : of(null))),
+      switchMap((id) =>
+        id ? this.bookService.getById(id).pipe(catchError(() => of(null))) : of(null),
+      ),
     ),
   );
 
@@ -146,21 +150,17 @@ export class BookForm {
     };
 
     const id = this.bookId();
+    // Hata mesajları `apiErrorInterceptor` tarafından otomatik gösterilir;
+    // burada sadece başarı durumunu handle etmemiz yeterli.
     if (id) {
-      this.bookService.update(id, payload).subscribe({
-        next: () => {
-          this.notification.success(`"${value.title}" güncellendi.`);
-          this.router.navigate(['/admin/books']);
-        },
-        error: () => this.notification.error('Güncelleme sırasında bir hata oluştu.'),
+      this.bookService.update(id, payload).subscribe(() => {
+        this.notification.success(`"${value.title}" güncellendi.`);
+        this.router.navigate(['/admin/books']);
       });
     } else {
-      this.bookService.create(payload).subscribe({
-        next: () => {
-          this.notification.success(`"${value.title}" eklendi.`);
-          this.router.navigate(['/admin/books']);
-        },
-        error: () => this.notification.error('Kayıt sırasında bir hata oluştu.'),
+      this.bookService.create(payload).subscribe(() => {
+        this.notification.success(`"${value.title}" eklendi.`);
+        this.router.navigate(['/admin/books']);
       });
     }
   }
